@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="login_layout_hyd" inherit_id="web.login_layout" name="Add Image">
+        <xpath expr="//div[1]/div[1]" position="attributes">
+            <attribute name="class">card border-0 bg-100 o_database_list</attribute>
+        </xpath>
+        <xpath expr="//div[1]/div[1]" position="attributes">
+            <attribute name="style">max-width: 300px;display: inline-block;margin-left: 15% !important;</attribute>
+        </xpath>
+        <xpath expr="//div[1]/div[1]" position="before">
+            <div class="" style="width: 50%;height: 100%; display: inline-block; vertical-align: top;">
+               <img src="/hyd_plservices/static/images/login_main_image.jpeg" style="height: 100%;width: 100%;/*! display: inline-block; */"/> 
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
