@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="view_task_form2_inherit_form_view_hyd" model="ir.ui.view">
+        <field name="name">project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="task_check_list.view_task_form2_inherit_form_view"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='task_checklist']" position="attributes">
+                <attribute name="domain">[('task_types_ids', 'in', [stage_id])]</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

@@ -8,16 +8,18 @@
     'author': "HyD Freelance",
     'website': "http://",
     'category': u'Other',
-    'version': '16.0.1.0',
+    'version': '15.0.1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['account',],
+    'depends': ['project', 'task_check_list'],
 
     # always loaded
     'data': [
             # data
             # views
             # "views/templates.xml",
+            "views/project_task_type_views.xml",
+            "views/project_task_views.xml",
             # "views/external_layout_hygiene.xml",
             # "views/res_company_views.xml",
             # "views/report_saledetails_views.xml",

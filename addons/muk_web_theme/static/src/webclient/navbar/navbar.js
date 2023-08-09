@@ -1,88 +1,69 @@
-/** @odoo-module **/
+/** @odoo-module */
 
 /**********************************************************************************
 *
 *    Copyright (c) 2017-today MuK IT GmbH.
 *
-*    This file is part of MuK REST for Odoo
+*    This file is part of MuK Theme
 *    (see https://mukit.at).
 *
-*    MuK Proprietary License v1.0
+*    This program is free software: you can redistribute it and/or modify
+*    it under the terms of the GNU Lesser General Public License as published by
+*    the Free Software Foundation, either version 3 of the License, or
+*    (at your option) any later version.
 *
-*    This software and associated files (the "Software") may only be used
-*    (executed, modified, executed after modifications) if you have
-*    purchased a valid license from MuK IT GmbH.
+*    This program is distributed in the hope that it will be useful,
+*    but WITHOUT ANY WARRANTY; without even the implied warranty of
+*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*    GNU Lesser General Public License for more details.
 *
-*    The above permissions are granted for a single database per purchased
-*    license. Furthermore, with a valid license it is permitted to use the
-*    software on other databases as long as the usage is limited to a testing
-*    or development environment.
-*
-*    You may develop modules based on the Software or that use the Software
-*    as a library (typically by depending on it, importing it and using its
-*    resources), but without copying any source code or material from the
-*    Software. You may distribute those modules under the license of your
-*    choice, provided that this license is compatible with the terms of the
-*    MuK Proprietary License (For example: LGPL, MIT, or proprietary licenses
-*    similar to this one).
-*
-*    It is forbidden to publish, distribute, sublicense, or sell copies of
-*    the Software or modified copies of the Software.
-*
-*    The above copyright notice and this permission notice must be included
-*    in all copies or substantial portions of the Software.
-*
-*    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-*    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-*    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-*    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-*    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-*    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-*    DEALINGS IN THE SOFTWARE.
+*    You should have received a copy of the GNU Lesser General Public License
+*    along with this program. If not, see <http://www.gnu.org/licenses/>.
 *
 **********************************************************************************/
 
-import { patch } from '@web/core/utils/patch';
+import { session } from "@web/session";
+import { url } from "@web/core/utils/urls";
+import { patch } from "@web/core/utils/patch";
+import { registry } from "@web/core/registry";
 
-import { NavBar } from '@web/webclient/navbar/navbar';
+import { NavBar } from "@web/webclient/navbar/navbar";
 import { AppsMenu } from "@muk_web_theme/webclient/appsmenu/appsmenu";
-import { AppsSearch } from "@muk_web_theme/webclient/appssearch/appssearch";
-import { AppsBar } from '@muk_web_theme/webclient/appsbar/appsbar';
+import { AppsBar } from "@muk_web_theme/webclient/appsbar/appsbar";
+import { SwitchCompanyMenu } from "@web/webclient/switch_company_menu/switch_company_menu";
+import { UserMenu } from "@web/webclient/user_menu/user_menu";
 
-patch(NavBar.prototype, 'muk_web_theme.NavBar', {
-	getAppsMenuItems(apps) {
-		return apps.map((menu) => {
-			const appsMenuItem = {
-				id: menu.id,
-				name: menu.name,
-				xmlid: menu.xmlid,
-				appID: menu.appID,
-				actionID: menu.actionID,
-				href: this.getMenuItemHref(menu),
-				action: () => this.menuService.selectMenu(menu),
-			};
-		    if (menu.webIconData) {
-		        const prefix = (
-		        	menu.webIconData.startsWith('P') ? 
-	    			'data:image/svg+xml;base64,' : 
-					'data:image/png;base64,'
-	            );
-		        appsMenuItem.webIconData = (
-	    			menu.webIconData.startsWith('data:image') ? 
-					menu.webIconData : 
-					prefix + menu.webIconData.replace(/\s/g, '')
-	            );
-		    }
-			return appsMenuItem;
-		});
+patch(NavBar.prototype, "muk_web_theme.NavBar", {
+    setup() {
+        this._super();
+        this.backgroundBlendMode = session.theme_background_blend_mode;
     },
 });
 
-patch(NavBar, 'muk_web_theme.NavBar', {
+patch(NavBar, "muk_web_theme.NavBar", {
     components: {
         ...NavBar.components,
         AppsMenu,
-        AppsSearch,
         AppsBar,
     },
 });
+
+const systrayItemUserMenu = {
+    Component: UserMenu,
+};
+
+const systrayItemSwitchCompanyMenu = {
+    Component: SwitchCompanyMenu,
+    isDisplayed(env) {
+        const { availableCompanies } = env.services.company;
+        return Object.keys(availableCompanies).length > 1;
+    },
+};
+
+registry.category("systray").add("web.user_menu", systrayItemUserMenu, { 
+	force: true, sequence: 1
+});
+registry.category("systray").add("SwitchCompanyMenu", systrayItemSwitchCompanyMenu, {
+	force: true, sequence: 2
+});
+	
