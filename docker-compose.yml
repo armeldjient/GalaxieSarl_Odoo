@@ -12,12 +12,12 @@ services:
         - ./postgresql:/var/lib/postgresql/data
 
   odoo16:
-    image: odoo:16.0
+    image: odoo:15
     user: root
     depends_on:
       - db
     ports:
-      - "80:8069"
+      - "8069:8069"
       - "20019:8072" # live chat
     tty: true
     command: --
@@ -32,4 +32,12 @@ services:
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: always             # run as a service
-    
+
+  nginx:
+    image: nginx
+    depends_on:
+      - odoo16
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d/
