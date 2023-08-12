@@ -1,1 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+add_expense_wiz_all,add_expense_wiz all,hyd_immigration.model_hyd_immigration_add_expense_wizard,,1,1,1,1
+add_expense_wiz_line_all,add_expense_wiz_line all,hyd_immigration.model_hyd_immigration_add_expense_line_wizard,,1,1,1,1

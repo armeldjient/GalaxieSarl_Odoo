@@ -20,12 +20,15 @@
             # "views/templates.xml",
             "views/project_task_type_views.xml",
             "views/project_task_views.xml",
+            "views/project_views.xml",
             # "views/external_layout_hygiene.xml",
             # "views/res_company_views.xml",
             # "views/report_saledetails_views.xml",
+            # wizards
+            "wizards/add_expense_task_views.xml",
             # workflow
             # security
-            # "security/ir.model.access.csv",
+            "security/ir.model.access.csv",
             # reports
             # "reports/report_paper.xml",
             # "reports/account_move_reports.xml",
