@@ -9,4 +9,5 @@ class TaskChecklist(models.Model):
 	    string='Check stage for this list',
 	    relation="tasktype_to_checklist"
 	)
+	optional = fields.Boolean(string='Optionnel?', default=False)
  

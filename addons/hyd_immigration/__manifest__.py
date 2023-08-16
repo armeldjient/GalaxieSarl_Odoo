@@ -21,8 +21,9 @@
             "views/project_task_type_views.xml",
             "views/project_task_views.xml",
             "views/project_views.xml",
+            "views/product_template_views.xml",
+            "views/account_move_views.xml",
             # "views/external_layout_hygiene.xml",
-            # "views/res_company_views.xml",
             # "views/report_saledetails_views.xml",
             # wizards
             "wizards/add_expense_task_views.xml",

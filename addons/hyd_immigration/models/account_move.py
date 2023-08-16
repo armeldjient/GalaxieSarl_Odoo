@@ -8,3 +8,4 @@ class AccountMove(models.Model):
 	    comodel_name='project.task',
 	    string='Task',
 	)
+	resume = fields.Text(string='Resume')

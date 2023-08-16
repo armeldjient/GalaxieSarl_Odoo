@@ -33,20 +33,44 @@
                 <field name="image_dossier" widget="image" class="oe_avatar" />
             </xpath>
 
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="task_checklist" widget="many2many_checkboxes" domain="[('task_types_ids', 'in', [stage_id])]"/>
+                <field name="checklist_progress" widget="percentpie"/>
+                <field name="currency_id" invisible="1"/>
+            </xpath>
+
+
         </field>
     </record>
 
-    <!-- IMMIGRATION VIEWS -->
-    <record id="view_in_invoice_bill_tree" model="ir.ui.view">
-            <field name="name">account.out.invoice.tree</field>
-            <field name="model">account.move</field>
-            <field name="inherit_id" ref="account.view_in_invoice_tree"/>
-            <field name="mode">primary</field>
-            <field name="arch" type="xml">
-                <field name="currency_id" position="attributes">
-                    <attribute name="string">Bill Currency</attribute>
-                </field>
-            </field>
-        </record>
+    <record id="view_task_form2_inherit_form_view_imm" model="ir.ui.view">
+        <field name="name">project.task.form</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="task_check_list.view_task_form2_inherit_form_view"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//page[@name='checklist']" position="replace"></xpath>
+
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_task_kanban_inherit_imm">
+        <field name="name">project.task</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_kanban"/>
+        <field name="arch" type="xml">
+            <!-- <xpath expr="//templates" position="before">
+                <field name="checklist_progress"/>
+                <field name="max_rate"/>
+            </xpath> -->
+            <xpath expr="//field[@name='tag_ids']" position="before">
+                <li>
+                    <field name="checklist_progress" widget="progressbar"
+                           options="{'max_field': 'max_rate',  'style': 'width:160px; height: 120px;'}">
+                    </field>
+                </li>
+            </xpath>
+        </field>
+    </record>
 
 </odoo>

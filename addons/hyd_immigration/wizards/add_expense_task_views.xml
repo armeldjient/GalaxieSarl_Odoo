@@ -4,8 +4,9 @@
         <field name="model">hyd_immigration.add_expense.wizard</field>
         <field name="arch" type="xml">
             <form string="Grant Badge To">
-                Selectionnez les produits a facturer
-                <field name="task_id" invisible="0"/>
+                <field name="task_id" invisible="1"/>
+                <field name="note" placeholder="Frais de test de langue"/>
+                <p>Selectionnez les produits a facturer</p>
                 <group>
                     <!-- <field name="user_id" nolabel="1" colspan="2"/> -->
                     <!-- <field name="comment" nolabel="1" placeholder="Describe what they did and why it matters (will be public)" colspan="4"/> -->
@@ -15,7 +16,8 @@
                             <field name="product_id" />
                             <field name="qty" />
                             <field name="price" />
-                            <field name="total" />
+                            <field name="total" sum="Total"/>
+                            <field name="currency_id" invisible="1"/>
                         </tree>
                     </field>
                 </group>

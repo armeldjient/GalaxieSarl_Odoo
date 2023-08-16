@@ -12,10 +12,19 @@ class add_expense_wizard(models.TransientModel):
         comodel_name='project.task',
         string='Procedures',
     )
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Currency',
+        related="task_id.company_id.currency_id"
+    )
     line_ids = fields.One2many(
         comodel_name='hyd_immigration.add_expense_line.wizard',
         inverse_name='wizard_exp_id',
         string='Lines',
+    )
+    note = fields.Text(
+        string='Note',
+        required=True
     )
 
     def add_new_expense(self):
@@ -28,30 +37,16 @@ class add_expense_wizard(models.TransientModel):
             'partner_id': self.task_id.partner_id.id, 'currency_id': currency.id,
             'date': fields.Date.today(), 'invoice_date': fields.Date.today(),
             'invoice_date_due': fields.Date.today(), 'taskp_id': self.task_id.id,
-            'move_type': 'out_invoice'
+            'move_type': 'out_invoice', 'resume': self.note
         })
 
         inv_lines = []
         fiscal_position = invoice.fiscal_position_id
         for _line in self.line_ids:
-            # accounts = _line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
-            # if invoice.is_sale_document(include_receipts=True):
-            #     # Out invoice.
-            #     account = accounts['income']
-            # elif invoice.is_purchase_document(include_receipts=True):
-            #     # In invoice.
-            #     account = accounts['expense']
-            # _line_inv = invoice_line_obj.create({
-            #     'move_id': invoice.id, 'product_id': _line.product_id.id,
-            #     'name': _line.product_id.name, 'quantity': _line.qty,
-            #     'price_unit': _line.price, 'product_uom_id': _line.product_id.uom_id.id,
-            #     'account_id': account and account.id
-            # })
             inv_lines.append(Command.create({
                 'move_id': invoice.id, 'product_id': _line.product_id.id,
                 'name': _line.product_id.name, 'quantity': _line.qty,
                 'price_unit': _line.price, 'product_uom_id': _line.product_id.uom_id.id,
-                # 'account_id': account and account.id
             }))
         invoice.update({'invoice_line_ids': inv_lines})
 
@@ -69,9 +64,21 @@ class add_expense_line_wizard(models.TransientModel):
         comodel_name='product.product',
         string='Product',
     )
+    currency_id = fields.Many2one(
+        comodel_name='res.currency',
+        string='Currency',
+        related="wizard_exp_id.currency_id"
+    )
     qty = fields.Float(string='Quantity', default=1)
-    price = fields.Float(string='Price')
-    total = fields.Float(string='Total', compute="_compute_total")
+    price = fields.Monetary(string='Price')
+    total = fields.Monetary(string='Total', compute="_compute_total")
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        lp_ = self.product_id.lst_price if self.product_id else 0
+        self.update({'price': lp_, 'qty': 1})
+
+        
 
     @api.depends("price", "qty")
     def _compute_total(self):

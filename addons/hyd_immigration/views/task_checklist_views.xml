@@ -1,6 +1,6 @@
 <odoo>
 
-    <record id="task_type_edit_hyd" model="ir.ui.view">
+    <!-- <record id="task_type_edit_hyd" model="ir.ui.view">
         <field name="name">project.task.type.form</field>
         <field name="model">project.task.type</field>
         <field name="inherit_id" ref="project.task_type_edit"/>
@@ -11,6 +11,6 @@
             </xpath>
 
         </field>
-    </record>
+    </record> -->
 
 </odoo>
