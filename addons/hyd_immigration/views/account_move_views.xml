@@ -1,5 +1,24 @@
 <odoo>
 
+    <record id="view_out_invoice_tree_imm" model="ir.ui.view">
+        <field name="name">account.out.invoice.tree.imm</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
+        <field name="priority">32</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="before">
+                <field name="resume" />
+            </xpath>
+            <xpath expr="//field[@name='invoice_partner_display_name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="open_view_invoice_task_imm" model="ir.actions.act_window">
         <field name="name">Factures</field>
         <field name="res_model">account.move</field>
@@ -22,25 +41,6 @@
             <field name="currency_id" position="attributes">
                 <attribute name="string">Bill Currency</attribute>
             </field>
-        </field>
-    </record>
-
-    <record id="view_out_invoice_tree_imm" model="ir.ui.view">
-        <field name="name">account.out.invoice.tree.imm</field>
-        <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_out_invoice_tree"/>
-        <field name="priority">32</field>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='name']" position="before">
-                <field name="resume" />
-            </xpath>
-            <xpath expr="//field[@name='invoice_partner_display_name']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
-            <xpath expr="//field[@name='name']" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </xpath>
         </field>
     </record>
 
