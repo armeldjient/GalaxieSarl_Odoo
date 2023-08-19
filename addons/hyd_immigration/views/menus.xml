@@ -1,0 +1,17 @@
+<odoo>
+
+	<menuitem 
+		name="IMMIGRATION"
+        id="menu_main_imm"
+        groups="project.group_project_manager,project.group_project_user"
+        web_icon="hyd_immigration,static/description/icon.png"
+        sequence="75"/>
+
+	<menuitem 
+		id="menu_project_dashboard_imm"
+        name="Dashboard"
+        action="project_dashboard_odoo.project_action_dashboard"
+        parent="hyd_immigration.menu_main_imm"
+        sequence="5"/>
+
+</odoo>

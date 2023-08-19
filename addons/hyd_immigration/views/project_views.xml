@@ -169,12 +169,6 @@
 
 
     <!-- MENUS -->
-    <menuitem name="IMMIGRATION"
-            id="menu_main_imm"
-            groups="project.group_project_manager,project.group_project_user"
-            web_icon="hyd_immigration,static/description/icon.png"
-            sequence="75"/>
-
-    <menuitem action="open_view_procedures_all" id="menu_projects" name="Procedures" parent="menu_main_imm" sequence="1"/>
+    <menuitem action="open_view_procedures_all" id="menu_projects" name="Procedures" parent="menu_main_imm" sequence="9"/>
 
 </odoo>

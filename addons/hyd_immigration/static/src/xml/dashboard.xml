@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+
+	<t t-name="DashboardProjectImm" t-inherit="project_dashboard_odoo.DashboardProject" t-inherit-mode="extension">
+
+		<xpath expr="//div[contains(@class, 'tot_tasks')]" position="replace">
+			<div class="oh-card-body tot_tasks" style="box-shadow:5px 11px 30px;">
+                <div class="stat-widget-one" style="display:flex;">
+                    <div class="stat-icon"><i class="fa fa-tasks" /></div>
+                    <div class="stat-head" style="padding: 5%;width: 60%;">Total Procedures</div>
+                    <div class="stat_count" style="padding: 4%;width: 30%;" id="tot_task">
+                        <t t-esc="widget.total_tasks" />
+                    </div>
+                </div>
+            </div>
+		</xpath>
+
+		<xpath expr="//div[contains(@class, 'hr_recorded')]/../.." position="replace"></xpath>
+		<xpath expr="//div[contains(@class, 'tot_profitability')]/../.." position="replace"></xpath>
+		<xpath expr="//div[contains(@class, 'tot_sale')]/../.." position="replace"></xpath>
+
+	</t>
+
+	<t t-name="DashboardChartImm" t-inherit="project_dashboard_odoo.DashboardChart" t-inherit-mode="extension">
+
+		
+
+	</t>
+
+</templates>
