@@ -56,3 +56,25 @@ class ProjectTask(models.Model):
                 rec.update({'checklist_progress': (check_list_len * 100) / total_len})
             else:
                 rec.checklist_progress = 0
+
+    @api.model
+    def get_task_amount(self):
+        """
+
+        Summery:
+            when the page is loaded get the data for the timesheet graph.
+        return:
+            type:It is a list. This list contain data that affecting the graph of employees.
+
+        """
+
+        tasks_customer = []
+        task_amount = []
+        tasks = self.search([])
+        for customer in tasks.mapped("partner_id"):
+            tasks_customer.append(customer.name)
+            amount = sum(
+                tasks.filtered(lambda x: x.partner_id and x.partner_id.id == customer.id).mapped("amount_invoice"))
+            task_amount.append(amount)
+        final = [task_amount, tasks_customer]
+        return final

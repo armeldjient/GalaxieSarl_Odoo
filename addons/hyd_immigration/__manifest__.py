@@ -33,8 +33,6 @@
             "security/ir.model.access.csv",
             # reports
             # "reports/report_paper.xml",
-            # "reports/account_move_reports.xml",
-            # "reports/facture_a5_report.xml",
     ],
 
     # only loaded in demonstration mode
@@ -42,13 +40,12 @@
     'installable': True,
     'images': ['static/images/main_screenshot.png'],
     'assets': {
+        'web.assets_backend': [
+            "hyd_immigration/static/src/js/dashboard_custom.js",
+        ],
         'web.assets_qweb': [
             'hyd_immigration/static/src/xml/dashboard.xml',
 
         ],
-        # 'point_of_sale.assets': [
-        #     'hyd_hygiene/static/src/xml/**/*',
-        #     'hyd_hygiene/static/src/js/*',
-        # ],
     },
 }
