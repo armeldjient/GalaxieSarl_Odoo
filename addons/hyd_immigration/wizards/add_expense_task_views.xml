@@ -5,6 +5,7 @@
         <field name="arch" type="xml">
             <form string="Grant Badge To">
                 <field name="task_id" invisible="1"/>
+                <field name="frais_honoraire" invisible="1"/>
                 <field name="note" placeholder="Frais de test de langue"/>
                 <p>Selectionnez les produits a facturer</p>
                 <group>

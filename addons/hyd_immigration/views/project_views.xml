@@ -148,6 +148,19 @@
         </field>
     </record> -->
 
+    <record id="edit_project_imm" model="ir.ui.view">
+        <field name="name">project.project.form</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//group[@name='extra_settings']" position="inside">
+                <field name="product_id" />
+            </xpath>
+
+        </field>
+    </record>
+
     <record id="open_view_procedures_all" model="ir.actions.act_window">
         <field name="name">Procedures</field>
         <field name="res_model">project.project</field>

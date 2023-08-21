@@ -12,4 +12,5 @@ class AccountMove(models.Model):
 	    comodel_name='project.project',
 	    related="taskp_id.project_id"
 	)
+	frais_honoraire = fields.Boolean(string='Frais honoraire', default=False)
 	resume = fields.Text(string='Resume')

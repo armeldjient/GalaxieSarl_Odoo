@@ -15,6 +15,10 @@ class ProjectTaskType(models.Model):
         inverse_name='task_project_id',
         string='Project task expense',
     )
+    product_id = fields.Many2one(
+        comodel_name='product.product',
+        string='Produit Honoraire',
+    )
 
     # def action_view_procedures(self):
     #     action = self.env['ir.actions.act_window'].with_context({'active_id': self.id})._for_xml_id('project.act_project_project_2_project_task_all')

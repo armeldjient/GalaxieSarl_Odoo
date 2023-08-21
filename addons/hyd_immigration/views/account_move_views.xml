@@ -53,6 +53,9 @@
             <xpath expr="//field[@name='payment_reference']" position="after">
                 <field name="resume" />
             </xpath>
+            <xpath expr="//field[@name='fiscal_position_id']" position="after">
+                <field name="frais_honoraire" />
+            </xpath>
         </field>
     </record>
 

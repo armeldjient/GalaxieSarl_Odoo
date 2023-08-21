@@ -1,4 +1,5 @@
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ProjectTask(models.Model):
@@ -11,6 +12,14 @@ class ProjectTask(models.Model):
     )
     amount_invoice = fields.Monetary(
         string='Amount Invoice',
+        compute="_compute_amount_invoice"
+    )
+    amount_honoraire = fields.Monetary(
+        string='Honoraire',
+        compute="_compute_amount_invoice"
+    )
+    honoraire_paye = fields.Monetary(
+        string='Honoraire payes',
         compute="_compute_amount_invoice"
     )
     image_dossier = fields.Image(
@@ -27,20 +36,31 @@ class ProjectTask(models.Model):
 
     def _compute_amount_invoice(self):
         for rec in self:
-            rec.amount_invoice = sum(rec.invoicesp_ids.mapped("amount_total"))
+            rec.amount_invoice = sum(rec.invoicesp_ids.filtered(lambda x: not x.frais_honoraire).mapped("amount_total"))
+            rec.amount_honoraire = sum(rec.invoicesp_ids.filtered(lambda x: x.frais_honoraire).mapped("amount_total"))
+            restant = sum(rec.invoicesp_ids.filtered(lambda x: x.frais_honoraire).mapped("amount_residual"))
+            rec.honoraire_paye = rec.amount_honoraire - restant
 
     def open_invoices(self):
         self.ensure_one()
-
+        frais_honoraire = self.env.context.get("frais_honoraire", False)
         action = self.env["ir.actions.actions"]._for_xml_id("hyd_immigration.open_view_invoice_task_imm")
         action['name'] = _("Depenses procedures"),
-        action['domain'] = [('id', 'in', self.invoicesp_ids.ids)]
+        inv_ids = self.invoicesp_ids.filtered(lambda x: x.frais_honoraire == frais_honoraire).ids
+        action['domain'] = [('id', 'in', inv_ids)]
         return action
 
     def add_expense(self):
         self.ensure_one()
+        frais_honoraire = self.env.context.get("frais_honoraire", False)
         action = self.env["ir.actions.actions"]._for_xml_id("hyd_immigration.action_add_expense_task_wizard")
         action['context'] = {'default_task_id': self.id}
+        if frais_honoraire:
+            product = self.project_id.product_id
+            if not product:
+                raise UserError(_("veuillez renseigner le produit honoraire dans la categorie"))
+            action['context'].update({'default_frais_honoraire': frais_honoraire, 'default_honoraire': product.id})
+
         return action
 
     @api.depends('task_checklist', 'stage_id')

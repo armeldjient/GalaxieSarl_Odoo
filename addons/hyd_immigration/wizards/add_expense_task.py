@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import api, models, fields
+from odoo import api, models, fields, _
 from odoo.fields import Command
 
 
@@ -26,6 +26,19 @@ class add_expense_wizard(models.TransientModel):
         string='Note',
         required=True
     )
+    frais_honoraire = fields.Boolean(string='Frais honoraire', default=False)
+
+    @api.onchange('frais_honoraire')
+    def onchange_frais_honoraire(self):
+        self.line_ids.unlink()
+        if self.frais_honoraire:
+            self.note = _("honoraire de gestion")
+            honoraire = self.env.context.get('default_honoraire')
+            product = self.env['product.product'].browse(honoraire)
+            if product:
+                self.update({'line_ids': [Command.create({
+                    'product_id': product.id, 'qty': 1, 'price': product.lst_price,
+                })]})
 
     def add_new_expense(self):
         self.ensure_one()
@@ -37,7 +50,8 @@ class add_expense_wizard(models.TransientModel):
             'partner_id': self.task_id.partner_id.id, 'currency_id': currency.id,
             'date': fields.Date.today(), 'invoice_date': fields.Date.today(),
             'invoice_date_due': fields.Date.today(), 'taskp_id': self.task_id.id,
-            'move_type': 'out_invoice', 'resume': self.note
+            'move_type': 'out_invoice', 'resume': self.note,
+            'frais_honoraire': self.frais_honoraire
         })
 
         inv_lines = []
