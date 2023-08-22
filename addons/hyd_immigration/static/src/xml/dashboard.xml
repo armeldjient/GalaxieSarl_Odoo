@@ -16,15 +16,82 @@
             </div>
 		</xpath>
 
-		<xpath expr="//div[contains(@class, 'hr_recorded')]/../.." position="replace"></xpath>
-		<xpath expr="//div[contains(@class, 'tot_profitability')]/../.." position="replace"></xpath>
+		<xpath expr="//div[contains(@class, 'hr_recorded')]/../.." position="replace">
+			<div class="col-md-4 col-sm-6 oh-payslip">
+                <div class="oh-card" style="width: 410px;">
+                    <div class="oh-card-body tot_tasks_end" style="box-shadow:5px 11px 30px;">
+                        <div class="stat-widget-one" style="display:flex;">
+                            <div class="stat-icon"><i class="fa fa-tasks" /></div>
+                            <div class="stat-head" style="padding: 5%;width: 60%;">Procedures Termines</div>
+                            <div class="stat_count" style="padding: 4%;width: 30%;" id="tot_hrs">
+                                <t t-esc="widget.total_tasks_ended" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</xpath>
+		<xpath expr="//div[contains(@class, 'tot_profitability')]/../.." position="replace">
+			<div class="col-md-4 col-sm-6 oh-payslip">
+                <div class="oh-card" style="width: 410px;">
+                    <div class="oh-card-body tot_tasks_cancel" style="box-shadow:5px 11px 30px;">
+                        <div class="stat-widget-one" style="display:flex;">
+                            <div class="stat-icon"><i class="fa fa-tasks" /></div>
+                            <div class="stat-head" style="padding: 5%;width: 60%;">Procedures annules</div>
+                            <div class="stat_count" style="padding: 4%;width: 30%;" id="tot_hrs">
+                                <t t-esc="widget.total_tasks_cancelled" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</xpath>
 		<xpath expr="//div[contains(@class, 'tot_sale')]/../.." position="replace"></xpath>
 
 	</t>
 
 	<t t-name="DashboardChartImm" t-inherit="project_dashboard_odoo.DashboardChart" t-inherit-mode="extension">
 
-		
+		<xpath expr="//t[@t-esc='proj[1]']/../../../../../../../../../.." position="replace">
+			<div class="hr_notification" style="background: #fff;
+                    height: 763px;margin-bottom: 15px;margin-top: 15px;box-shadow:5px 11px 30px;">
+                <div class="hr_notification_head" style="font-size: 17px;text-align: center;padding: 12px 0;color: #fff;font-weight: 300;background: #000080;margin-bottom: 9px;">
+                   Dernieres procedures en cours
+                </div>
+                <div class="col-sm-12 col-lg-12" style="padding:0;">
+                    <div class="text-color">
+                        <div class="media" style="overflow-y: auto;height: 704px;">
+                            <div class="media-body">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="14">Projet</th>
+                                            <th rowspan="14">Client</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="widget.task_data" t-as="proj">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="proj[1]" />
+                                                </td>
+                                                <td>
+                                                    <t t-esc="proj[0]" />
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</xpath>
+
+		<xpath expr="//t[@t-esc='hour_recorde']/../../../../../../../../../../../.." position="replace"></xpath>
+		<xpath expr="//t[@t-esc='invoiced']/../../../../../../../../../../../.." position="replace"></xpath>
+		<xpath expr="//h4[contains(@class, 'project-pill')]/../../../../.." position="replace"></xpath>
 
 	</t>
 

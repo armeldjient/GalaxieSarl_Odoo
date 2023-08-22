@@ -5,8 +5,97 @@ odoo.define('hyd_immigration.Dashboard', function (require) {
     var rpc = require('web.rpc');
     const { useListener } = require("@web/core/utils/hooks");
     var core = require('web.core');
+    var _t = core._t;
+
+    var flag = 0;
+    var tot_so = []
+    var tot_project = []
+    var tot_task = []
 
     PjDashboard.include({
+        events: Object.assign({}, PjDashboard.prototype.events, {
+            'click .tot_tasks_end': 'tot_tasks_end_method',
+            'click .tot_tasks_cancel': 'tot_tasks_cancel_method',
+        }),
+
+        /**
+        for opening project task view
+        */
+        tot_tasks_end_method: function(e) {
+            var self = this;
+            e.stopPropagation();
+            e.preventDefault();
+            var options = {
+                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
+            };
+            if (flag == 0) {
+                this.do_action({
+                    name: _t("Procedures terminees"),
+                    type: 'ir.actions.act_window',
+                    res_model: 'project.task',
+                    view_mode: 'tree,kanban,form',
+                    domain: [['stage_id.is_closed', '=', true]],
+                    views: [
+                        [false, 'list'],
+                        [false, 'form']
+                    ],
+                    target: 'current'
+                }, options)
+            } else {
+                if (tot_task) {
+                    this.do_action({
+                        name: _t("Procedures terminees"),
+                        type: 'ir.actions.act_window',
+                        res_model: 'project.task',
+                        domain: [["id", "in", tot_task], ['stage_id.is_closed', '=', true]],
+                        view_mode: 'tree,kanban,form',
+                        views: [
+                            [false, 'list'],
+                            [false, 'form']
+                        ],
+                        target: 'current'
+                    }, options)
+                }
+            }
+        },
+
+        tot_tasks_cancel_method: function(e) {
+            var self = this;
+            e.stopPropagation();
+            e.preventDefault();
+            var options = {
+                on_reverse_breadcrumb: this.on_reverse_breadcrumb,
+            };
+            if (flag == 0) {
+                this.do_action({
+                    name: _t("Procedures terminees"),
+                    type: 'ir.actions.act_window',
+                    res_model: 'project.task',
+                    view_mode: 'tree,kanban,form',
+                    domain: [['stage_id.is_cancel', '=', true]],
+                    views: [
+                        [false, 'list'],
+                        [false, 'form']
+                    ],
+                    target: 'current'
+                }, options)
+            } else {
+                if (tot_task) {
+                    this.do_action({
+                        name: _t("Procedures terminees"),
+                        type: 'ir.actions.act_window',
+                        res_model: 'project.task',
+                        domain: [["id", "in", tot_task], ['stage_id.is_cancel', '=', true]],
+                        view_mode: 'tree,kanban,form',
+                        views: [
+                            [false, 'list'],
+                            [false, 'form']
+                        ],
+                        target: 'current'
+                    }, options)
+                }
+            }
+        },
 
         render_project_task: function() {
             var self = this
@@ -56,7 +145,7 @@ odoo.define('hyd_immigration.Dashboard', function (require) {
                 var data = {
                     labels: arrays[1],
                     datasets: [{
-                            label: "Hours Spent",
+                            label: "Montant",
                             data: arrays[0],
                             backgroundColor: [
                                 "rgba(190, 27, 75,1)",
@@ -173,6 +262,59 @@ odoo.define('hyd_immigration.Dashboard', function (require) {
                     });
 
                 })
+        },
+
+        fetch_data: function() {
+            var self = this;
+            var def1 = this._rpc({
+                model: 'project.project',
+                method: 'get_tiles_data'
+            }).then(function(result) {
+                console.log(result)
+                self.total_projects = result['total_projects'],
+                    self.total_tasks = result['total_tasks'],
+                    self.total_tasks_ended = result['total_tasks_ended'],
+                    self.total_tasks_cancelled = result['total_tasks_cancelled'],
+                    self.total_hours = result['total_hours'],
+                    self.total_profitability = result['total_profitability'],
+                    self.total_employees = result['total_employees'],
+                    self.total_sale_orders = result['total_sale_orders'],
+                    self.project_stage_list = result['project_stage_list']
+                tot_so = result['sale_list']
+            });
+            var def2 = self._rpc({
+                    model: "project.project",
+                    method: "get_details",
+                })
+                .then(function(res) {
+                    self.invoiced = res['invoiced'];
+                    self.to_invoice = res['to_invoice'];
+                    self.time_cost = res['time_cost'];
+                    self.expen_cost = res['expen_cost'];
+                    self.payment_details = res['payment_details'];
+                });
+            var def3 = self._rpc({
+                    model: "project.project",
+                    method: "get_hours_data",
+                })
+                .then(function(res) {
+                    self.hour_recorded = res['hour_recorded'];
+                    self.hour_recorde = res['hour_recorde'];
+                    self.billable_fix = res['billable_fix'];
+                    self.non_billable = res['non_billable'];
+                    self.total_hr = res['total_hr'];
+                });
+
+            var def4 = self._rpc({
+                    model: "project.project",
+                    method: "get_task_data",
+                })
+                .then(function(res) {
+                    self.task_data = res['project'];
+
+                });
+
+            return $.when(def1, def2, def3, def4);
         },
 
     });
